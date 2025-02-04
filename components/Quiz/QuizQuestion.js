@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Pin, Lightbulb, Flag, MessageCircle, Check, X } from 'lucide-react';
-import Feedback from './feedback';
-import Comments from './comments';
-import Explanation from './explanation';
+import Feedback from '@/components/Quiz/Feedback';
+import Comments from '@/components/Quiz/comments';
+import Explanation from '@/components/Quiz/explanation';
 
 const QuizQuestion = ({ question }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);

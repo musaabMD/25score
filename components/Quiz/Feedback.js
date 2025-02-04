@@ -1,13 +1,18 @@
 // feedback.js
+// components/Question/Feedback.js
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
-const Feedback = ({ onSubmit }) => {
+const Loading = () => (
+  <div className="animate-pulse h-96 bg-gray-100 rounded-md" />
+);
+
+const FeedbackContent = ({ onSubmit }) => {
   const [feedbackIssues, setFeedbackIssues] = useState([]);
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackHelpful, setFeedbackHelpful] = useState(null);
@@ -28,11 +33,9 @@ const Feedback = ({ onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    // Here you might send the feedback to your backend
     if (onSubmit) {
       onSubmit({ feedbackIssues, feedbackText, feedbackHelpful });
     }
-    // Reset local state after submission
     setFeedbackIssues([]);
     setFeedbackText('');
     setFeedbackHelpful(null);
@@ -41,11 +44,10 @@ const Feedback = ({ onSubmit }) => {
   return (
     <div className="pt-6 space-y-6">
       <h3 className="text-lg font-medium">Provide Feedback</h3>
-      
       <div className="space-y-4">
         {issues.map((issue) => (
           <div key={issue.id} className="flex items-center space-x-2">
-            <Checkbox 
+            <Checkbox
               id={issue.id}
               checked={feedbackIssues.includes(issue.id)}
               onCheckedChange={(checked) => handleIssueChange(issue.id, checked)}
@@ -54,14 +56,12 @@ const Feedback = ({ onSubmit }) => {
           </div>
         ))}
       </div>
-
       <Textarea
         placeholder="Describe the issue..."
         value={feedbackText}
         onChange={(e) => setFeedbackText(e.target.value)}
         className="min-h-[100px]"
       />
-
       <div className="space-y-4">
         <p className="font-medium">Did you find this question helpful?</p>
         <div className="flex gap-4">
@@ -83,15 +83,17 @@ const Feedback = ({ onSubmit }) => {
           </Button>
         </div>
       </div>
-
-      <Button 
-        className="w-full"
-        onClick={handleSubmit}
-      >
+      <Button className="w-full" onClick={handleSubmit}>
         Submit Feedback
       </Button>
     </div>
   );
 };
+
+const Feedback = (props) => (
+  <Suspense fallback={<Loading />}>
+    <FeedbackContent {...props} />
+  </Suspense>
+);
 
 export default Feedback;
