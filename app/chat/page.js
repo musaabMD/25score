@@ -174,3 +174,49 @@
 //     </div>
 //   );
 // }
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from "@/libs/supabase/client";
+import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Loader2 } from 'lucide-react';
+
+const ChatPage = () => {
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+  
+  useEffect(() => {
+    const initChat = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setLoading(false);
+      } catch (error) {
+        console.error('Error initializing chat:', error);
+        setLoading(false);
+      }
+    };
+
+    initChat();
+  }, [supabase]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="max-w-3xl w-full mx-auto flex-1 p-4">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h1 className="text-2xl font-semibold mb-4">Chat Support</h1>
+          <p>Connect with our support team</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChatPage;
